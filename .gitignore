@@ -1,0 +1,6 @@
+.gitsetup
+.hidden/
+.keep
+__pycache__/
+*.sw
+file.json

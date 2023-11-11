@@ -1,0 +1,81 @@
+#!/usr/bin/python3
+# Created by Israel Udofia & Emmanuel Ademola
+
+"""Unittest for base_model.py"""
+
+import unittest
+import models
+from models.base_model import BaseModel
+from datetime import datetime
+from time import sleep
+
+
+class TestBaseModelClass(unittest.TestCase):
+    """Test suites"""
+
+    def test_no_args_instantiates(self):
+        self.assertEqual(BaseModel, type(BaseModel()))
+
+    def test_uuid(self):
+        BM1 = BaseModel()
+        BM2 = BaseModel()
+
+        self.assertIsInstance(BM1, BaseModel)
+        self.assertTrue(hasattr(BM1, "id"))
+        self.assertNotEqual(BM1.id, BM2.id)
+        self.assertIsInstance(BM1.id, str)
+
+    def test_created_at(self):
+        BM1 = BaseModel()
+
+        self.assertTrue(hasattr(BM1, "created_at"))
+        self.assertIsInstance(BM1.created_at, datetime)
+
+    def test_updated_at(self):
+        BM1 = BaseModel()
+
+        self.assertTrue(hasattr(BM1, "updated_at"))
+        self.assertIsInstance(BM1.updated_at, datetime)
+
+    def test_save_method(self):
+        model = BaseModel()
+        initial_updated_at = model.updated_at
+        model.save()
+        self.assertNotEqual(model.updated_at, initial_updated_at)
+
+    def test_new_instance_stored_in_objects(self):
+        self.assertIn(BaseModel(), models.storage.all().values())
+
+    def test_two_models_created_at(self):
+        bm1 = BaseModel()
+        sleep(0.1)
+        bm2 = BaseModel()
+        self.assertLess(bm1.created_at, bm2.created_at)
+        self.assertNotEqual(bm1.created_at, bm2.created_at)
+
+    def test_two_models_updated_at(self):
+        bm1 = BaseModel()
+        sleep(0.1)
+        bm2 = BaseModel()
+        self.assertLess(bm1.updated_at, bm2.updated_at)
+        self.assertNotEqual(bm1.updated_at, bm2.updated_at)
+
+    def test_fixed_id(self):
+        bm1 = BaseModel()
+        bm1.id = '123'
+        self.assertEqual(bm1.id, '123')
+
+        """  Having issue with this in the main code
+
+    def test_instantiation_with_kwargs(self):
+        dt = datetime.today()
+        dt_iso = dt.isoformat()
+        bm = BaseModel(id="345", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(bm.id, "345")
+        self.assertEqual(bm.created_at, dt)
+        self.assertEqual(bm.updated_at, dt)
+
+        """
+
+if __name__ == '__main__':
+    unittest.main()

@@ -6,6 +6,7 @@ serve as the base of our model.
 """
 from uuid import uuid4
 from datetime import datetime
+import models
 
 
 class BaseModel:
@@ -15,6 +16,9 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """initializes a new base model"""
+        self.id = str(uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
         if kwargs:
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
@@ -26,9 +30,7 @@ class BaseModel:
                 if 'updated_at' not in kwargs.keys():
                     self.updated_at = datetime.now()
         else:
-            self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """Return the print/str representation of the BaseModel instance."""
@@ -40,6 +42,7 @@ class BaseModel:
         with the current datetime
         """
         self.updated_at = datetime.today()
+        models.storage.save()
 
     def to_dict(self):
         """returns a dictionary containing all keys/values

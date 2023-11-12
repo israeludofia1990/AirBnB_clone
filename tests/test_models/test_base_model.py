@@ -65,7 +65,13 @@ class TestBaseModelClass(unittest.TestCase):
         bm1.id = '123'
         self.assertEqual(bm1.id, '123')
 
-        """  Having issue with this in the main code
+    def test_to_dict(self):
+        bm1 = BaseModel()
+        model_dict = bm1.to_dict()
+
+        self.assertIn('__class__', model_dict)
+        self.assertIn('created_at', model_dict)
+        self.assertIn('updated_at', model_dict)
 
     def test_instantiation_with_kwargs(self):
         dt = datetime.today()
@@ -75,7 +81,16 @@ class TestBaseModelClass(unittest.TestCase):
         self.assertEqual(bm.created_at, dt)
         self.assertEqual(bm.updated_at, dt)
 
-        """
+    def test_serialization_and_deserialization(self):
+        # I got this from the intranet example (task 3)
+        my_model = BaseModel()
+        my_model.name = "My_First_Model"
+        my_model.my_number = 89
+        my_model_json = my_model.to_dict()
+        my_new_model = BaseModel(**my_model_json)
+        my_new_model_json = my_new_model.to_dict()
+        self.assertEqual(my_model_json, my_new_model_json)
+
 
 if __name__ == '__main__':
     unittest.main()

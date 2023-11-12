@@ -2,5 +2,5 @@
 .hidden/
 .keep
 __pycache__/
-*.sw
+*.sw*
 file.json

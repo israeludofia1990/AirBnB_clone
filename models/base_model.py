@@ -16,20 +16,17 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """initializes a new base model"""
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        time_format = '%Y-%m-%dT%H:%M:%S.%f'
         if kwargs:
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
-                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
-                if 'id' not in kwargs.keys():
-                    self.id = str(uuid4())
-                if 'created_at' not in kwargs.keys():
-                    self.created_at = datetime.now()
-                if 'updated_at' not in kwargs.keys():
-                    self.updated_at = datetime.now()
+                    self.__dict__[key] = datetime.strptime(value, time_format)
+                elif key != "__class__":
+                    self.__dict__[key] = value
         else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             models.storage.new(self)
 
     def __str__(self):

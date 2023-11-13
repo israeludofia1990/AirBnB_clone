@@ -103,7 +103,7 @@ class HBNBCommand(cmd.Cmd):
                 model_id = split_key[1]
 
                 if (model_name == class_name) and (model_id == class_id):
-                    del(storage_objects_dict[key])
+                    del (storage_objects_dict[key])
                     storage.save()
                     return
         print("** no instance found **")
